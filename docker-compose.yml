@@ -3,7 +3,7 @@ services:
     image: mysql:8
     container_name: mysql-db
     environment:
-      MYSQL_ROOT_PASSWORD: docker
+      MYSQL_ROOT_PASSWORD: vika1624
       MYSQL_DATABASE: klutasksdb
     ports:
       - "3309:3306"
