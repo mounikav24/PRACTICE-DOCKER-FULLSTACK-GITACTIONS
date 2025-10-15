@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f3f4f6, #f9fafb);
+  color: #333;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 24px;
+  /* background: linear-gradient(135deg, #f3f4f6 0%, #e5abec 50%, #a5b4fc 100%); */
+  background: linear-gradient(135deg, #dae3f7 0%, #f9a8d4 50%, #a5b4fc 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.10);
+}
+
+.app-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.app-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #4f46e5;
+  margin-bottom: 20px;
+}
