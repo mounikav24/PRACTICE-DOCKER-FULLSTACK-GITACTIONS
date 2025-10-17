@@ -23,7 +23,11 @@ function TaskList({ tasks, onTaskDeleted, onEdit }) {
           <li key={t.id}>
             <span>
               <strong>{idx + 1}.</strong>{" "}
-              <strong>{t.startDate} - {t.endDate}</strong> | {t.title} : {t.description} | Priority: {t.priority} | Status: {t.status}
+              <strong>
+                {t.startDate} - {t.endDate}
+              </strong>{" "}
+              | {t.title} : {t.description} | Priority: {t.priority} | Status:{" "}
+              {t.status}
             </span>
             <button onClick={() => onEdit(t)}>✏️</button>
             <button onClick={() => deleteTask(t.id)}>❌</button>
