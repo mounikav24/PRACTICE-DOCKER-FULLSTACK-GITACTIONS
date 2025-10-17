@@ -1,13 +1,12 @@
 import React from "react";
 import axios from "axios";
-
 import "./TaskList.css";
 
-function TaskList({ tasks, setTasks, onEdit }) {
+function TaskList({ tasks, onTaskDeleted, onEdit }) {
   const deleteTask = (id) => {
     axios
       .delete(`${import.meta.env.VITE_API_URL}/tasks/${id}`)
-      .then(() => setTasks(tasks.filter((t) => t.id !== id)));
+      .then(() => onTaskDeleted(id));
   };
 
   return (

@@ -4,18 +4,18 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import TaskList from "./components/TaskList";
 import TaskForm from "./components/TaskForm";
 import Summary from "./components/Summary";
-import Search from "./components/Search"; // Import the Search component
+import Search from "./components/Search";
 import "./App.css";
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [editTask, setEditTask] = useState(null);
-  const [filteredTasks, setFilteredTasks] = useState([]); // State for filtered tasks
+  const [filteredTasks, setFilteredTasks] = useState([]);
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_URL}/tasks`).then(res => {
       setTasks(res.data);
-      setFilteredTasks(res.data); // Initialize filtered tasks
+      setFilteredTasks(res.data);
     });
   }, []);
 
@@ -24,15 +24,22 @@ function App() {
   };
 
   const handleTaskAdded = (newTask) => {
-    setTasks([...tasks, newTask]);
-    setFilteredTasks([...tasks, newTask]); // Update filtered tasks
+    const updatedTasks = [...tasks, newTask];
+    setTasks(updatedTasks);
+    setFilteredTasks([...filteredTasks, newTask]);
   };
 
   const handleTaskUpdated = (updatedTask) => {
     const updatedTasks = tasks.map(t => t.id === updatedTask.id ? updatedTask : t);
     setTasks(updatedTasks);
-    setFilteredTasks(updatedTasks); // Update filtered tasks
+    setFilteredTasks(filteredTasks.map(t => t.id === updatedTask.id ? updatedTask : t));
     setEditTask(null);
+  };
+
+  const handleTaskDeleted = (deletedId) => {
+    const updatedTasks = tasks.filter(t => t.id !== deletedId);
+    setTasks(updatedTasks);
+    setFilteredTasks(filteredTasks.filter(t => t.id !== deletedId));
   };
 
   const handleSearch = (query) => {
@@ -57,15 +64,15 @@ function App() {
             path="/"
             element={
               <>
-                <Search onSearch={handleSearch} /> {/* Add Search component */}
+                <Search onSearch={handleSearch} />
                 <TaskForm
                   onTaskAdded={handleTaskAdded}
                   editTask={editTask}
                   onTaskUpdated={handleTaskUpdated}
                 />
                 <TaskList
-                  tasks={filteredTasks} // Use filtered tasks
-                  setTasks={setTasks}
+                  tasks={filteredTasks}
+                  onTaskDeleted={handleTaskDeleted}
                   onEdit={handleEdit}
                 />
               </>
