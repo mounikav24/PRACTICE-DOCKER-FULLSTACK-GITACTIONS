@@ -4,7 +4,11 @@ import "./TaskList.css";
 
 function TaskList({ tasks, onTaskDeleted, onEdit }) {
   const deleteTask = async (id) => {
+    console.log("=== DELETE BUTTON CLICKED ===");
+    console.log("Task ID to delete:", id);
+    
     if (!window.confirm("Are you sure you want to delete this task?")) {
+      console.log("Delete cancelled by user");
       return;
     }
     
@@ -20,7 +24,9 @@ function TaskList({ tasks, onTaskDeleted, onEdit }) {
     }
   };
 
-  console.log("TaskList rendering with tasks:", tasks);
+  console.log("TaskList component rendered");
+  console.log("Number of tasks:", tasks.length);
+  console.log("onTaskDeleted callback:", typeof onTaskDeleted);
 
   return (
     <div className="task-list">
@@ -36,8 +42,14 @@ function TaskList({ tasks, onTaskDeleted, onEdit }) {
               | {t.title} : {t.description} | Priority: {t.priority} | Status:{" "}
               {t.status}
             </span>
-            <button onClick={() => onEdit(t)}>✏️</button>
-            <button onClick={() => deleteTask(t.id)}>❌</button>
+            <button onClick={() => {
+              console.log("Edit button clicked for task:", t.id);
+              onEdit(t);
+            }}>✏️</button>
+            <button onClick={() => {
+              console.log("Delete button clicked for task:", t.id);
+              deleteTask(t.id);
+            }}>❌</button>
           </li>
         ))}
       </ul>
