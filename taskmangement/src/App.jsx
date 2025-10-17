@@ -37,9 +37,12 @@ function App() {
   };
 
   const handleTaskDeleted = (deletedId) => {
+    console.log("Deleting task with ID:", deletedId);
+    console.log("Tasks before delete:", tasks);
     const updatedTasks = tasks.filter(t => t.id !== deletedId);
     setTasks(updatedTasks);
     setFilteredTasks(filteredTasks.filter(t => t.id !== deletedId));
+    console.log("Tasks after delete:", updatedTasks);
   };
 
   const handleSearch = (query) => {
