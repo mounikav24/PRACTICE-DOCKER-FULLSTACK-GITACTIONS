@@ -18,16 +18,17 @@ services:
       retries: 10
 
   backend:
-    image: mounikav24/docker-tasksbackend:latest
-    container_name: springboot
-    ports:
-      - "8080:8080"
-    depends_on:
-      - mysqldb
-    restart: on-failure
-    networks:
-      - springboot-mysql-net
-    environment:  # Add these environment variables
+  image: mounikav24/docker-tasksbackend:latest
+  container_name: springboot
+  ports:
+    - "8080:8080"
+  depends_on:
+    mysqldb:
+      condition: service_healthy  # Add this
+  restart: on-failure
+  networks:
+    - springboot-mysql-net
+  environment:  
     - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/klutasksdb
     - SPRING_DATASOURCE_USERNAME=root
     - SPRING_DATASOURCE_PASSWORD=taskmanagementapp
