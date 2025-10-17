@@ -4,16 +4,23 @@ import "./TaskList.css";
 
 function TaskList({ tasks, onTaskDeleted, onEdit }) {
   const deleteTask = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this task?")) {
+      return;
+    }
+    
     try {
       console.log("Attempting to delete task:", id);
-      await axios.delete(`${import.meta.env.VITE_API_URL}/tasks/${id}`);
-      console.log("Delete successful, calling callback");
+      const response = await axios.delete(`${import.meta.env.VITE_API_URL}/tasks/${id}`);
+      console.log("Delete response:", response.status);
+      console.log("Calling onTaskDeleted callback");
       onTaskDeleted(id);
     } catch (error) {
       console.error("Error deleting task:", error);
       alert("Failed to delete task. Please try again.");
     }
   };
+
+  console.log("TaskList rendering with tasks:", tasks);
 
   return (
     <div className="task-list">

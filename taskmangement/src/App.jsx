@@ -10,26 +10,11 @@ import "./App.css";
 function App() {
   const [tasks, setTasks] = useState([]);
   const [editTask, setEditTask] = useState(null);
-  const [filteredTasks, setFilteredTasks] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchTasks();
   }, []);
-
-  // Sync filteredTasks whenever tasks change
-  useEffect(() => {
-    if (searchQuery) {
-      const lowercasedQuery = searchQuery.toLowerCase();
-      const filtered = tasks.filter(task =>
-        task.title.toLowerCase().includes(lowercasedQuery) ||
-        task.description.toLowerCase().includes(lowercasedQuery)
-      );
-      setFilteredTasks(filtered);
-    } else {
-      setFilteredTasks(tasks);
-    }
-  }, [tasks, searchQuery]);
 
   const fetchTasks = async () => {
     try {
@@ -45,22 +30,36 @@ function App() {
   };
 
   const handleTaskAdded = (newTask) => {
-    fetchTasks();
+    setTasks(prevTasks => [...prevTasks, newTask]);
   };
 
   const handleTaskUpdated = (updatedTask) => {
-    fetchTasks();
+    setTasks(prevTasks => 
+      prevTasks.map(t => t.id === updatedTask.id ? updatedTask : t)
+    );
     setEditTask(null);
   };
 
-  const handleTaskDeleted = async (deletedId) => {
-    console.log("Delete callback triggered for ID:", deletedId);
-    await fetchTasks();
+  const handleTaskDeleted = (deletedId) => {
+    console.log("Deleting task with ID:", deletedId);
+    setTasks(prevTasks => {
+      const updated = prevTasks.filter(t => t.id !== deletedId);
+      console.log("Updated tasks:", updated);
+      return updated;
+    });
   };
 
   const handleSearch = (query) => {
     setSearchQuery(query);
   };
+
+  // Filter tasks based on search query
+  const filteredTasks = searchQuery
+    ? tasks.filter(task =>
+        task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : tasks;
 
   return (
     <Router>
