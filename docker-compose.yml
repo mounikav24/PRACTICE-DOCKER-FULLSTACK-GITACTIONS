@@ -16,7 +16,7 @@ services:
     image: mounikav24/docker-tasksbackend:latest
     container_name: springboot
     ports:
-      - "8008:8080"
+      - "0808:8080"
     depends_on:
       - mysqldb
     restart: on-failure
@@ -27,7 +27,7 @@ services:
     image: mounikav24/docker-tasksfrontend:latest
     container_name: react
     ports:
-      - "3003:80"
+      - "0303:80"
     depends_on:
       - backend
     restart: on-failure
