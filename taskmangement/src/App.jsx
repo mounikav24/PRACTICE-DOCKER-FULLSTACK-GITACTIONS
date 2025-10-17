@@ -11,41 +11,60 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [editTask, setEditTask] = useState(null);
   const [filteredTasks, setFilteredTasks] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = () => {
     axios.get(`${import.meta.env.VITE_API_URL}/tasks`).then(res => {
       setTasks(res.data);
       setFilteredTasks(res.data);
     });
-  }, []);
+  };
 
   const handleEdit = (task) => {
     setEditTask(task);
   };
 
   const handleTaskAdded = (newTask) => {
-    const updatedTasks = [...tasks, newTask];
-    setTasks(updatedTasks);
-    setFilteredTasks([...filteredTasks, newTask]);
+    setTasks(prevTasks => {
+      const updated = [...prevTasks, newTask];
+      if (!searchQuery) {
+        setFilteredTasks(updated);
+      }
+      return updated;
+    });
   };
 
   const handleTaskUpdated = (updatedTask) => {
-    const updatedTasks = tasks.map(t => t.id === updatedTask.id ? updatedTask : t);
-    setTasks(updatedTasks);
-    setFilteredTasks(filteredTasks.map(t => t.id === updatedTask.id ? updatedTask : t));
+    setTasks(prevTasks => {
+      const updated = prevTasks.map(t => t.id === updatedTask.id ? updatedTask : t);
+      setFilteredTasks(prevFiltered => 
+        prevFiltered.map(t => t.id === updatedTask.id ? updatedTask : t)
+      );
+      return updated;
+    });
     setEditTask(null);
   };
 
   const handleTaskDeleted = (deletedId) => {
     console.log("Deleting task with ID:", deletedId);
-    console.log("Tasks before delete:", tasks);
-    const updatedTasks = tasks.filter(t => t.id !== deletedId);
-    setTasks(updatedTasks);
-    setFilteredTasks(filteredTasks.filter(t => t.id !== deletedId));
-    console.log("Tasks after delete:", updatedTasks);
+    setTasks(prevTasks => {
+      const updated = prevTasks.filter(t => t.id !== deletedId);
+      console.log("Updated tasks:", updated);
+      return updated;
+    });
+    setFilteredTasks(prevFiltered => {
+      const updated = prevFiltered.filter(t => t.id !== deletedId);
+      console.log("Updated filtered tasks:", updated);
+      return updated;
+    });
   };
 
   const handleSearch = (query) => {
+    setSearchQuery(query);
     const lowercasedQuery = query.toLowerCase();
     const filtered = tasks.filter(task =>
       task.title.toLowerCase().includes(lowercasedQuery) ||
