@@ -11,20 +11,34 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - springboot-mysql-net
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   backend:
-    image: mounikav24/docker-tasksbackend:latest
+    build:
+      context: ./taskmanager
+      dockerfile: backend.Dockerfile
     container_name: springboot
     ports:
       - "8080:8080"
     depends_on:
-      - mysqldb
+      mysqldb:
+        condition: service_healthy
     restart: on-failure
     networks:
       - springboot-mysql-net
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/klutasksdb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=taskmanagementapp
 
   frontend:
-    image: mounikav24/docker-tasksfrontend:latest
+    build:
+      context: ./taskmangement
+      dockerfile: frontend.Dockerfile
     container_name: react
     ports:
       - "80:80"
