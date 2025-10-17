@@ -4,14 +4,19 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import TaskList from "./components/TaskList";
 import TaskForm from "./components/TaskForm";
 import Summary from "./components/Summary";
+import Search from "./components/Search"; // Import the Search component
 import "./App.css";
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [editTask, setEditTask] = useState(null);
+  const [filteredTasks, setFilteredTasks] = useState([]); // State for filtered tasks
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_URL}/tasks`).then(res => setTasks(res.data));
+    axios.get(`${import.meta.env.VITE_API_URL}/tasks`).then(res => {
+      setTasks(res.data);
+      setFilteredTasks(res.data); // Initialize filtered tasks
+    });
   }, []);
 
   const handleEdit = (task) => {
@@ -20,11 +25,23 @@ function App() {
 
   const handleTaskAdded = (newTask) => {
     setTasks([...tasks, newTask]);
+    setFilteredTasks([...tasks, newTask]); // Update filtered tasks
   };
 
   const handleTaskUpdated = (updatedTask) => {
-    setTasks(tasks.map(t => t.id === updatedTask.id ? updatedTask : t));
+    const updatedTasks = tasks.map(t => t.id === updatedTask.id ? updatedTask : t);
+    setTasks(updatedTasks);
+    setFilteredTasks(updatedTasks); // Update filtered tasks
     setEditTask(null);
+  };
+
+  const handleSearch = (query) => {
+    const lowercasedQuery = query.toLowerCase();
+    const filtered = tasks.filter(task =>
+      task.title.toLowerCase().includes(lowercasedQuery) ||
+      task.description.toLowerCase().includes(lowercasedQuery)
+    );
+    setFilteredTasks(filtered);
   };
 
   return (
@@ -40,13 +57,14 @@ function App() {
             path="/"
             element={
               <>
+                <Search onSearch={handleSearch} /> {/* Add Search component */}
                 <TaskForm
                   onTaskAdded={handleTaskAdded}
                   editTask={editTask}
                   onTaskUpdated={handleTaskUpdated}
                 />
                 <TaskList
-                  tasks={tasks}
+                  tasks={filteredTasks} // Use filtered tasks
                   setTasks={setTasks}
                   onEdit={handleEdit}
                 />

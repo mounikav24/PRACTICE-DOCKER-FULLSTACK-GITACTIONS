@@ -49,4 +49,9 @@ public class TaskService {
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
         return repo.findTasksLast7DaysByStatus(sevenDaysAgo, status);
     }
+
+    // New method for searching tasks
+    public List<Task> searchTasks(String query) {
+        return repo.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query, query);
+    }
 }

@@ -27,7 +27,8 @@ function Summary() {
       <ul>
         {summary.map((t) => (
           <li key={t.id}>
-            {new Date(t.createdAt).toLocaleDateString()} - {t.title} ({t.status})
+            {new Date(t.createdAt).toLocaleDateString()} - {t.title}
+            {t.description ? ` - ${t.description}` : ""} ({t.status})
           </li>
         ))}
       </ul>

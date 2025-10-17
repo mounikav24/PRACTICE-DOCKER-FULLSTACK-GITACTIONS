@@ -12,4 +12,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("SELECT t FROM Task t WHERE t.createdAt >= :sevenDaysAgo AND t.status = :status")
     List<Task> findTasksLast7DaysByStatus(LocalDateTime sevenDaysAgo, String status);
+
+    // New method for searching tasks
+    List<Task> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String title, String description);
 }

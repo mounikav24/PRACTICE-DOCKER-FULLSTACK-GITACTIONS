@@ -5,10 +5,6 @@ import com.example.taskmanager.service.TaskService;
 import com.example.taskmanager.exception.TaskNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -58,5 +54,11 @@ public class TaskController {
             return service.getLast7DaysTasksByStatus(status);
         }
         return service.getLast7DaysTasks();
+    }
+
+    // New endpoint for searching tasks
+    @GetMapping("/search")
+    public List<Task> searchTasks(@RequestParam String query) {
+        return service.searchTasks(query);
     }
 }
