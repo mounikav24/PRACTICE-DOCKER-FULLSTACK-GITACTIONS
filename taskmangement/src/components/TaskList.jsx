@@ -2,15 +2,11 @@ import React from "react";
 import axios from "axios";
 import "./TaskList.css";
 
-function TaskList({ tasks, onTaskDeleted, onEdit }) {
-  const deleteTask = async (id) => {
-    try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/tasks/${id}`);
-      onTaskDeleted(id);
-    } catch (error) {
-      console.error("Error deleting task:", error);
-      alert("Failed to delete task. Please try again.");
-    }
+function TaskList({ tasks, setTasks, onEdit }) {
+  const deleteTask = (id) => {
+    axios
+      .delete(`${import.meta.env.VITE_API_URL}/tasks/${id}`)
+      .then(() => setTasks(tasks.filter((t) => t.id !== id)));
   };
 
   return (

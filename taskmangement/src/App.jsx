@@ -14,15 +14,11 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    fetchTasks();
-  }, []);
-
-  const fetchTasks = () => {
     axios.get(`${import.meta.env.VITE_API_URL}/tasks`).then(res => {
       setTasks(res.data);
       setFilteredTasks(res.data);
     });
-  };
+  }, []);
 
   const handleEdit = (task) => {
     setEditTask(task);
