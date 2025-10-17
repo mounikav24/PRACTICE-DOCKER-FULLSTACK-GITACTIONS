@@ -29,38 +29,17 @@ function App() {
   };
 
   const handleTaskAdded = (newTask) => {
-    setTasks(prevTasks => {
-      const updated = [...prevTasks, newTask];
-      if (!searchQuery) {
-        setFilteredTasks(updated);
-      }
-      return updated;
-    });
+    fetchTasks(); // Refresh from server
   };
 
   const handleTaskUpdated = (updatedTask) => {
-    setTasks(prevTasks => {
-      const updated = prevTasks.map(t => t.id === updatedTask.id ? updatedTask : t);
-      setFilteredTasks(prevFiltered => 
-        prevFiltered.map(t => t.id === updatedTask.id ? updatedTask : t)
-      );
-      return updated;
-    });
+    fetchTasks(); // Refresh from server
     setEditTask(null);
   };
 
-  const handleTaskDeleted = (deletedId) => {
-    console.log("Deleting task with ID:", deletedId);
-    setTasks(prevTasks => {
-      const updated = prevTasks.filter(t => t.id !== deletedId);
-      console.log("Updated tasks:", updated);
-      return updated;
-    });
-    setFilteredTasks(prevFiltered => {
-      const updated = prevFiltered.filter(t => t.id !== deletedId);
-      console.log("Updated filtered tasks:", updated);
-      return updated;
-    });
+  const handleTaskDeleted = async (deletedId) => {
+    console.log("Delete callback triggered for ID:", deletedId);
+    await fetchTasks(); // Refresh from server
   };
 
   const handleSearch = (query) => {
