@@ -27,6 +27,10 @@ services:
     restart: on-failure
     networks:
       - springboot-mysql-net
+    environment:  # Add these environment variables
+    - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/klutasksdb
+    - SPRING_DATASOURCE_USERNAME=root
+    - SPRING_DATASOURCE_PASSWORD=taskmanagementapp
 
   frontend:
     image: mounikav24/docker-tasksfrontend:latest
