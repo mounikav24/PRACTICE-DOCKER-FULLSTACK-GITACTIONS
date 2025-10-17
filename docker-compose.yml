@@ -1,0 +1,41 @@
+services:
+  mysqldb:
+    image: mysql:8
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: taskmanagementapp
+      MYSQL_DATABASE: klutasksdb
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - springboot-mysql-net
+
+  backend:
+    image: mounikav24/docker-tasksbackend:latest
+    container_name: springboot
+    ports:
+      - "0808:8080"
+    depends_on:
+      - mysqldb
+    restart: on-failure
+    networks:
+      - springboot-mysql-net
+
+  frontend:
+    image: mounikav24/docker-tasksfrontend:latest
+    container_name: react
+    ports:
+      - "0303:80"
+    depends_on:
+      - backend
+    restart: on-failure
+    networks:
+      - springboot-mysql-net
+
+volumes:
+  mysql_data:
+
+networks:
+  springboot-mysql-net:
